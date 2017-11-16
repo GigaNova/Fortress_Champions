@@ -1,20 +1,22 @@
 package com.fortress.main;
 
-import com.fortress.entities.TestEntity;
 import com.fortress.stages.GameStage;
+import com.fortress.stages.TestStage;
 
 public class StageHandler{
 
 	private GameStage currentStage;
-	private TestEntity test;
 	
 	public StageHandler() {
-		currentStage = null;
-		test = new TestEntity();
+		currentStage = new TestStage();
+		currentStage.startStage();
 	}
 	
 	public void update() {
-		test.setError(new Error("I am an error!", Error.SEVERITY.LOW));
-		ErrorHandler.check();
+		currentStage.update();
+	}
+	
+	public void render() {
+		currentStage.render();
 	}
 }

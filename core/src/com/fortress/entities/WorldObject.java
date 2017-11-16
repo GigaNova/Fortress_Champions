@@ -1,70 +1,47 @@
 package com.fortress.entities;
 
+import java.util.Random;
 import java.util.UUID;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.fortress.main.Error;
-import com.fortress.main.ErrorHandler;
+import com.fortress.main.WorldObjectHandler;
 
-public abstract class WorldObject {
+public abstract class WorldObject{
 	
-	private String _ID;
-	private int xPos, yPos, zIndex;
-	private Error error;
-	
+	protected String _ID;
+	protected Error error;
+	private boolean checkedForRemoval;
+	protected Sprite sprite;
+	protected Vector2 position;
+
 	public WorldObject() {
 		_ID = UUID.randomUUID().toString();
+		this.position = new Vector2(0, 0);
 		
-		ErrorHandler.watchObject(this);
+		WorldObjectHandler.watchObject(this);
 	}
 	
-	public WorldObject(int x, int y) {
+	public WorldObject(Sprite sprite, int x, int y) {
 		_ID = UUID.randomUUID().toString();
-		xPos = x;
-		yPos = y;
-		zIndex = -1;
+		this.sprite = sprite;
+		this.position = new Vector2(x, y);
 		
-		ErrorHandler.watchObject(this);
+		WorldObjectHandler.watchObject(this);
 	}
 	
-	public WorldObject(int x, int y, int z) {
+	public WorldObject(Sprite sprite, int x, int y, int z) {
 		_ID = UUID.randomUUID().toString();
-		xPos = x;
-		yPos = y;
-		zIndex = z;
+		this.sprite = sprite;
+		this.position = new Vector2(x, y);
 		
-		ErrorHandler.watchObject(this);
+		WorldObjectHandler.watchObject(this);
 	}
 	
 	public String getId() {
 		return _ID;
-	}
-	
-	public int getX() {
-		return xPos;
-	}
-
-	public void setX(int xPos) {
-		this.xPos = xPos;
-	}
-
-	public int getY() {
-		return yPos;
-	}
-
-	public void setY(int yPos) {
-		this.yPos = yPos;
-	}
-
-	public int getZ() {
-		return zIndex;
-	}
-
-	public void setZ(int zIndex) {
-		if(zIndex < 0) {
-			System.out.println("Z index cannot be negative!");
-			return;
-		}
-		this.zIndex = zIndex;
 	}
 
 	public void setError(Error error) {
@@ -83,8 +60,39 @@ public abstract class WorldObject {
 		this.error = null;
 	}
 	
+	public boolean isCheckedForRemoval() {
+		return checkedForRemoval;
+	}
+
+	public void setCheckedForRemoval(boolean checkedForRemoval) {
+		this.checkedForRemoval = checkedForRemoval;
+	}
+	
+	public Sprite getSprite() {
+		return sprite;
+	}
+
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
+	}
+	
+	public Vector2 getPosition() {
+		return position;
+	}
+
+	public void setPosition(Vector2 position) {
+		this.position = position;
+	}
+
+	public Vector2 generateRandomLocation(int boundX, int boundY) {
+		Random rand = new Random();
+		return new Vector2(rand.nextInt(boundX), rand.nextInt(boundY));
+	}
+	
 	public abstract void update();
 	
-	public abstract void render();
+	public abstract void render(SpriteBatch batch);
+	
+	public abstract void dispose();
 	
 }
